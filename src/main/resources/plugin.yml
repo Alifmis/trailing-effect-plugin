@@ -1,0 +1,4 @@
+name: trailing-effect-plugin
+version: '1.0-SNAPSHOT'
+main: org.alifmis.trailingEffectPlugin.TrailingEffectPlugin
+api-version: '1.21'
