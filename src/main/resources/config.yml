@@ -1,0 +1,3 @@
+# TrailingEffectPlugin configuration
+# No configuration required — trails are stored in trails.yml.
+# This file exists so saveDefaultConfig() has something to copy.
