@@ -1,5 +1,6 @@
 package org.alifmis.trailingeffectplugin.listener;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -21,6 +22,10 @@ public class PlayerMoveListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
+
+        // 1. Disable for spectator mode
+        if (player.getGameMode() == GameMode.SPECTATOR) return;
+
         Location from = event.getFrom();
         Location to = event.getTo();
 
@@ -35,8 +40,15 @@ public class PlayerMoveListener implements Listener {
         if (trails.isEmpty()) return;
 
         Location loc = player.getLocation();
+
+        double height = player.getHeight();
+        double step = 0.3;
+
         for (Particle particle : trails) {
-            player.getWorld().spawnParticle(particle, loc, 1, 0.3, 0.3, 0.3, 0.01);
+            for (double yOffset = 0; yOffset < height; yOffset += step) {
+                Location pLoc = loc.clone().add(0, yOffset, 0);
+                player.getWorld().spawnParticle(particle, pLoc, 1, 0.05, 0, 0.05, 0.01);
+            }
         }
     }
 }
