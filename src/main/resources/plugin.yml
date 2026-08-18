@@ -1,5 +1,9 @@
 name: trailing-effect-plugin
 version: '1.0-SNAPSHOT'
 main: org.alifmis.trailingeffectplugin.TrailingEffectPlugin
-api-version: '1.21'
+api-version: '26.2'
 folia-supported: true
+permissions:
+  trailing:
+    description: Allows use of the /trailing command
+    default: op

@@ -41,13 +41,19 @@ public class PlayerMoveListener implements Listener {
 
         Location loc = player.getLocation();
 
+        // Spawn particles along the player's full body height
         double height = player.getHeight();
         double step = 0.3;
 
         for (Particle particle : trails) {
             for (double yOffset = 0; yOffset < height; yOffset += step) {
                 Location pLoc = loc.clone().add(0, yOffset, 0);
-                player.getWorld().spawnParticle(particle, pLoc, 1, 0.05, 0, 0.05, 0.01);
+                // Random initial momentum: each particle gets its own random direction and speed
+                double dx = (Math.random() - 0.5) * 0.5;
+                double dy = (Math.random() - 0.5) * 0.2;
+                double dz = (Math.random() - 0.5) * 0.5;
+                double speed = 0.05 + Math.random() * 0.2;
+                player.getWorld().spawnParticle(particle, pLoc, 1, dx, dy, dz, speed);
             }
         }
     }

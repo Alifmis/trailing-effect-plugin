@@ -11,6 +11,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.alifmis.trailingeffectplugin.manager.TrailManager;
 
@@ -28,7 +30,12 @@ public class TrailingCommand {
     public void register(Commands registrar) {
         registrar.register(
                 Commands.literal("trailing")
-                        .requires(source -> source.getSender().isOp())
+                        .requires(source -> {
+                            CommandSender sender = source.getSender();
+                            return sender instanceof ConsoleCommandSender
+                                    || sender.isOp()
+                                    || sender.hasPermission("trailing");
+                        })
                         .then(Commands.argument("player", StringArgumentType.word())
                                 .suggests(this::suggestPlayers)
                                 .then(Commands.literal("add")
