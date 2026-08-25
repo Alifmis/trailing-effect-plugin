@@ -1,3 +1,13 @@
 # TrailingEffectPlugin configuration
-# No configuration required — trails are stored in trails.yml.
-# This file exists so saveDefaultConfig() has something to copy.
+# Reload with /trailing reload (op/console only) — changes apply without a server restart.
+
+# Maximum number of trailing effects each player can have at once.
+# Set to 0 to disallow adding trails entirely.
+max-trails-per-player: 2
+
+# Particles that players are NOT allowed to add as trailing effects.
+# Blocked for everyone (ops/console included). Use lowercase particle names,
+# e.g.: explosion_emitter, elder_guardian, campfire_cosy_smoke
+blocked-particles:
+  - explosion_emitter
+  - elder_guardian

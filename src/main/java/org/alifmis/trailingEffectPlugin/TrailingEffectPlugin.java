@@ -22,7 +22,7 @@ public final class TrailingEffectPlugin extends JavaPlugin {
                 io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents.COMMANDS,
                 commands -> {
                     var registrar = commands.registrar();
-                    new TrailingCommand(trailManager).register(registrar);
+                    new TrailingCommand(trailManager, this).register(registrar);
                 }
         );
 
