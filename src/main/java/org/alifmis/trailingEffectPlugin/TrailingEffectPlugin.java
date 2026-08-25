@@ -14,9 +14,9 @@ public final class TrailingEffectPlugin extends JavaPlugin {
         saveDefaultConfig();
 
         this.trailManager = new TrailManager(this);
-        this.trailManager.loadTrails();
+        this.trailManager.init();
 
-        getServer().getPluginManager().registerEvents(new PlayerMoveListener(trailManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(trailManager, this), this);
 
         getLifecycleManager().registerEventHandler(
                 io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents.COMMANDS,
@@ -32,8 +32,8 @@ public final class TrailingEffectPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         if (trailManager != null) {
-            trailManager.saveTrails();
-            getLogger().info("Trails saved to trails.yml");
+            trailManager.close();
+            getLogger().info("Trails database closed");
         }
     }
 

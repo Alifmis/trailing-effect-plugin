@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.alifmis.trailingeffectplugin.manager.TrailManager;
 
 import java.util.Set;
@@ -14,9 +15,11 @@ import java.util.Set;
 public class PlayerMoveListener implements Listener {
 
     private final TrailManager trailManager;
+    private final JavaPlugin plugin;
 
-    public PlayerMoveListener(TrailManager trailManager) {
+    public PlayerMoveListener(TrailManager trailManager, JavaPlugin plugin) {
         this.trailManager = trailManager;
+        this.plugin = plugin;
     }
 
     private static final double RESERVED_HEIGHT = 0.2;
@@ -40,6 +43,9 @@ public class PlayerMoveListener implements Listener {
 
         Set<Particle> trails = trailManager.getTrails(player.getUniqueId());
         if (trails.isEmpty()) return;
+
+        int interval = Math.max(1, plugin.getConfig().getInt("particle-spawn-interval-ticks", 1));
+        if (interval > 1 && player.getTicksLived() % interval != 0) return;
 
         Location loc = player.getLocation();
 

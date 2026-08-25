@@ -11,3 +11,8 @@ max-trails-per-player: 2
 blocked-particles:
   - explosion_emitter
   - elder_guardian
+
+# Spawn a trail particle only every N ticks while a player moves (1 = every tick).
+# Higher values reduce particle packet load on the server and the client —
+# the main performance knob for many players at once.
+particle-spawn-interval-ticks: 2
