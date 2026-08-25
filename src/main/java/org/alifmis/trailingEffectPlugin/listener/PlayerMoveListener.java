@@ -49,14 +49,27 @@ public class PlayerMoveListener implements Listener {
 
         Location loc = player.getLocation();
 
+        boolean dense = plugin.getConfig().getBoolean("dense-particle-spawn", false);
+
         for (Particle particle : trails) {
-            Location pLoc = loc.clone().add(0, RESERVED_HEIGHT, 0);
-            // Random initial momentum: each particle gets its own random direction and speed
-            double dx = (Math.random() - 0.5) * 0.5;
-            double dy = Math.abs(Math.random() - 0.5);
-            double dz = (Math.random() - 0.5) * 0.5;
-            double speed = 0.05 + Math.random() * 0.2;
-            player.getWorld().spawnParticle(particle, pLoc, 1, dx, dy, dz, speed);
+            if (dense) {
+                double height = player.getHeight();
+                double step = 0.3;
+                for (double yOffset = 0; yOffset < height; yOffset += step) {
+                    spawnParticle(particle, loc.clone().add(0, yOffset, 0));
+                }
+            } else {
+                spawnParticle(particle, loc.clone().add(0, RESERVED_HEIGHT, 0));
+            }
         }
+    }
+
+    // Random initial momentum: each particle gets its own random direction and speed
+    private void spawnParticle(Particle particle, Location pLoc) {
+        double dx = (Math.random() - 0.5) * 0.5;
+        double dy = Math.abs(Math.random() - 0.5);
+        double dz = (Math.random() - 0.5) * 0.5;
+        double speed = 0.05 + Math.random() * 0.2;
+        pLoc.getWorld().spawnParticle(particle, pLoc, 1, dx, dy, dz, speed);
     }
 }

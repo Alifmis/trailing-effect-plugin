@@ -16,3 +16,9 @@ blocked-particles:
 # Higher values reduce particle packet load on the server and the client —
 # the main performance knob for many players at once.
 particle-spawn-interval-ticks: 2
+
+# Denser effect: when true, each trail spawns a column of particles along the
+# player's full body height per spawn. When false (default), each trail spawns
+# exactly ONE particle per spawn — the cheapest option, recommended when many
+# players have trails at once.
+dense-particle-spawn: false

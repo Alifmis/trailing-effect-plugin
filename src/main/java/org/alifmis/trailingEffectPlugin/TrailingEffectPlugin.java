@@ -11,6 +11,7 @@ public final class TrailingEffectPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Auto-generate config.yml from the jar (settings + defaults for server owners)
         saveDefaultConfig();
 
         this.trailManager = new TrailManager(this);

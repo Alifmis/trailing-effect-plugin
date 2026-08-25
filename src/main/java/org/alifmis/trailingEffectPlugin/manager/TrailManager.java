@@ -1,8 +1,6 @@
 package org.alifmis.trailingeffectplugin.manager;
 
 import org.bukkit.Particle;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -127,45 +125,6 @@ public class TrailManager {
             }
         }
         plugin.getLogger().info("Loaded " + count + " trails from database");
-        if (count == 0) importLegacyTrails();
-    }
-
-    private void importLegacyTrails() {
-        File file = new File(plugin.getDataFolder(), "trails.yml");
-        if (!file.exists()) return;
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection section = config.getConfigurationSection("player-trails");
-        if (section == null) return;
-        int imported = 0;
-        for (String key : section.getKeys(false)) {
-            try {
-                UUID uuid = UUID.fromString(key);
-                for (String name : section.getStringList(key)) {
-                    Particle particle = safeValueOf(name);
-                    if (particle == null) continue;
-                    playerTrails.computeIfAbsent(uuid, k -> ConcurrentHashMap.newKeySet()).add(particle);
-                    if (!insertSync(uuid, particle)) continue;
-                    imported++;
-                }
-            } catch (IllegalArgumentException ignored) {
-                // skip invalid UUID keys
-            }
-        }
-        plugin.getLogger().info("Imported " + imported + " trails from legacy trails.yml");
-    }
-
-    private boolean insertSync(UUID uuid, Particle particle) {
-        if (connection == null) return false;
-        try (PreparedStatement stmt = connection.prepareStatement(
-                "INSERT OR IGNORE INTO " + TABLE + " (uuid, particle) VALUES (?, ?)")) {
-            stmt.setString(1, uuid.toString());
-            stmt.setString(2, particle.name());
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to import trail for " + uuid, e);
-            return false;
-        }
     }
 
     private static Particle safeValueOf(String name) {
