@@ -73,6 +73,13 @@ public class TrailingCommand {
             return Command.SINGLE_SUCCESS;
         }
 
+        // If player has >= 2 trails, do not allow him to add trail
+        if (trailManager.getTrails(target.getUniqueId()).size() >= 2) {
+            ctx.getSource().getSender().sendMessage(
+                    Component.text("You can have at most 2 trails.", NamedTextColor.RED));
+            return Command.SINGLE_SUCCESS;
+        }
+
         Particle particle;
         try {
             particle = Particle.valueOf(particleName);
