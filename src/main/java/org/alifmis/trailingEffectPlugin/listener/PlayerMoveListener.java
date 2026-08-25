@@ -19,11 +19,13 @@ public class PlayerMoveListener implements Listener {
         this.trailManager = trailManager;
     }
 
+    private static final double RESERVED_HEIGHT = 0.2;
+
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        // 1. Disable for spectator mode
+        // Disable for spectator mode
         if (player.getGameMode() == GameMode.SPECTATOR) return;
 
         Location from = event.getFrom();
@@ -41,20 +43,14 @@ public class PlayerMoveListener implements Listener {
 
         Location loc = player.getLocation();
 
-        // Spawn particles along the player's full body height
-        double height = player.getHeight();
-        double step = 0.3;
-
         for (Particle particle : trails) {
-            for (double yOffset = 0; yOffset < height; yOffset += step) {
-                Location pLoc = loc.clone().add(0, yOffset, 0);
-                // Random initial momentum: each particle gets its own random direction and speed
-                double dx = (Math.random() - 0.5) * 0.5;
-                double dy = (Math.random() - 0.5) * 0.2;
-                double dz = (Math.random() - 0.5) * 0.5;
-                double speed = 0.05 + Math.random() * 0.2;
-                player.getWorld().spawnParticle(particle, pLoc, 1, dx, dy, dz, speed);
-            }
+            Location pLoc = loc.clone().add(0, RESERVED_HEIGHT, 0);
+            // Random initial momentum: each particle gets its own random direction and speed
+            double dx = (Math.random() - 0.5) * 0.5;
+            double dy = Math.abs(Math.random() - 0.5);
+            double dz = (Math.random() - 0.5) * 0.5;
+            double speed = 0.05 + Math.random() * 0.2;
+            player.getWorld().spawnParticle(particle, pLoc, 1, dx, dy, dz, speed);
         }
     }
 }

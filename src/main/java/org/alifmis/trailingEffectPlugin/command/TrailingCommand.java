@@ -66,6 +66,13 @@ public class TrailingCommand {
             return Command.SINGLE_SUCCESS;
         }
 
+        // Non-admin senders (trailing permission only) may only modify their own trail
+        if (!isAdmin(ctx.getSource()) && !isSelf(ctx.getSource(), target)) {
+            ctx.getSource().getSender().sendMessage(
+                    Component.text("You can only modify your own trail.", NamedTextColor.RED));
+            return Command.SINGLE_SUCCESS;
+        }
+
         Particle particle;
         try {
             particle = Particle.valueOf(particleName);
@@ -92,6 +99,13 @@ public class TrailingCommand {
             return Command.SINGLE_SUCCESS;
         }
 
+        // Non-admin senders (trailing permission only) may only modify their own trail
+        if (!isAdmin(ctx.getSource()) && !isSelf(ctx.getSource(), target)) {
+            ctx.getSource().getSender().sendMessage(
+                    Component.text("You can only modify your own trail.", NamedTextColor.RED));
+            return Command.SINGLE_SUCCESS;
+        }
+
         Particle particle;
         try {
             particle = Particle.valueOf(particleName);
@@ -113,13 +127,31 @@ public class TrailingCommand {
 
     private CompletableFuture<Suggestions> suggestPlayers(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
         String remaining = builder.getRemainingLowerCase();
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        if (isAdmin(ctx.getSource())) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                String name = player.getName();
+                if (name.toLowerCase().startsWith(remaining)) {
+                    builder.suggest(name);
+                }
+            }
+        } else if (ctx.getSource().getSender() instanceof Player player) {
+            // Trailing-permission players only see (and can use) their own name
             String name = player.getName();
             if (name.toLowerCase().startsWith(remaining)) {
                 builder.suggest(name);
             }
         }
         return builder.buildFuture();
+    }
+
+    private boolean isAdmin(CommandSourceStack source) {
+        CommandSender sender = source.getSender();
+        return sender instanceof ConsoleCommandSender || sender.isOp();
+    }
+
+    private boolean isSelf(CommandSourceStack source, Player target) {
+        return source.getSender() instanceof Player player
+                && player.getUniqueId().equals(target.getUniqueId());
     }
 
     private CompletableFuture<Suggestions> suggestAllParticles(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
