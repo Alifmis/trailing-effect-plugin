@@ -44,11 +44,13 @@ public class PlayerMoveListener implements Listener {
         Set<Particle> trails = trailManager.getTrails(player.getUniqueId());
         if (trails.isEmpty()) return;
 
+        // spawn throttle: 1 = spawn every tick, higher values cut particle packet load
         int interval = Math.max(1, plugin.getConfig().getInt("particle-spawn-interval-ticks", 1));
         if (interval > 1 && player.getTicksLived() % interval != 0) return;
 
         Location loc = player.getLocation();
 
+        // dense mode spawns a particle column along the body height
         boolean dense = plugin.getConfig().getBoolean("dense-particle-spawn", false);
 
         for (Particle particle : trails) {

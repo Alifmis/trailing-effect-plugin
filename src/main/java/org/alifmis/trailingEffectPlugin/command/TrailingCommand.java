@@ -41,6 +41,7 @@ public class TrailingCommand {
                         })
                         .then(Commands.argument("player", StringArgumentType.word())
                                 .suggests(this::suggestPlayers)
+                                // "reload" is an argument, not a literal, so it is absent from the client command tree
                                 .executes(ctx -> executeRootAction(ctx))
                                 .then(Commands.literal("add")
                                         .then(Commands.argument("particle", StringArgumentType.word())

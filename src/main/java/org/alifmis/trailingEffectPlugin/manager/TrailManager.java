@@ -32,6 +32,7 @@ public class TrailManager {
         this.plugin = plugin;
     }
 
+    // Opens the database, creates the schema, loads trails into the cache; call once during onEnable
     public void init() {
         try {
             // Driver is loaded by name (no compile-time dependency — it ships inside the server)
